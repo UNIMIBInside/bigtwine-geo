@@ -1,0 +1,33 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "it.unimib.disco.bigtwine"
+    },
+    "jhipsterVersion": "5.7.0",
+    "applicationType": "microservice",
+    "baseName": "geodecoder",
+    "packageName": "it.unimib.disco.bigtwine",
+    "packageFolder": "it/unimib/disco/bigtwine",
+    "serverPort": "9005",
+    "authenticationType": "jwt",
+    "cacheProvider": "no",
+    "enableHibernateCache": false,
+    "websocket": false,
+    "databaseType": "no",
+    "devDatabaseType": "no",
+    "prodDatabaseType": "no",
+    "searchEngine": false,
+    "messageBroker": "kafka",
+    "serviceDiscoveryType": "eureka",
+    "buildTool": "gradle",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "NzhjNzg1ZTVmY2I5ZTI1NjBmOTk1ZDhmYTQ3MWI4NDkwOGNmZDBjZTNjYTBiNjBhMWViNjQ1OTEzN2JhZmE4ZmJhZDMzMWQ5OGI3OWM2OGEyMzQ1OGViMWRkYTk2OWZmM2ZmZWExOTE3ZjQ0ZGQ1NTYxNTEzMjJiYTRkNzBiYjc=",
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "otherModules": [],
+    "enableTranslation": false,
+    "clientPackageManager": "npm",
+    "skipClient": true,
+    "skipUserManagement": true
+  }
+}
