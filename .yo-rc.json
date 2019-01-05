@@ -5,7 +5,7 @@
     },
     "jhipsterVersion": "5.7.0",
     "applicationType": "microservice",
-    "baseName": "geodecoder",
+    "baseName": "geo",
     "packageName": "it.unimib.disco.bigtwine",
     "packageFolder": "it/unimib/disco/bigtwine",
     "serverPort": "9005",

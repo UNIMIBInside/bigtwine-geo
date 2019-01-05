@@ -1,6 +1,6 @@
 package it.unimib.disco.bigtwine.web.rest;
 
-import it.unimib.disco.bigtwine.GeodecoderApp;
+import it.unimib.disco.bigtwine.GeoApp;
 import it.unimib.disco.bigtwine.web.rest.vm.LoggerVM;
 import ch.qos.logback.classic.AsyncAppender;
 import ch.qos.logback.classic.LoggerContext;
@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see LogsResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = GeodecoderApp.class)
+@SpringBootTest(classes = GeoApp.class)
 public class LogsResourceIntTest {
 
     private MockMvc restLogsMockMvc;

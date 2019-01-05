@@ -1,6 +1,6 @@
 package it.unimib.disco.bigtwine.web.rest.errors;
 
-import it.unimib.disco.bigtwine.GeodecoderApp;
+import it.unimib.disco.bigtwine.GeoApp;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see ExceptionTranslator
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = GeodecoderApp.class)
+@SpringBootTest(classes = GeoApp.class)
 public class ExceptionTranslatorIntTest {
 
     @Autowired

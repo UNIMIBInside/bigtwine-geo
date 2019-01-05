@@ -1,7 +1,7 @@
 {
-  "name": "geodecoder",
+  "name": "geo",
   "version": "0.0.0",
-  "description": "Description for geodecoder",
+  "description": "Description for geo",
   "private": true,
   "license": "UNLICENSED",
   "cacheDirectories": [

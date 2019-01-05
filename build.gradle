@@ -52,7 +52,7 @@ version = '0.0.1-SNAPSHOT'
 description = ''
 
 bootWar {
-   mainClassName = 'it.unimib.disco.bigtwine.GeodecoderApp'
+   mainClassName = 'it.unimib.disco.bigtwine.GeoApp'
 }
 
 war {
@@ -60,7 +60,7 @@ war {
 }
 
 springBoot {
-    mainClassName = 'it.unimib.disco.bigtwine.GeodecoderApp'
+    mainClassName = 'it.unimib.disco.bigtwine.GeoApp'
     buildInfo()
 }
 

@@ -24,8 +24,8 @@ eureka:
         instance-info-replication-interval-seconds: 10
         registry-fetch-interval-seconds: 10
     instance:
-        appname: geodecoder
-        instanceId: geodecoder:${spring.application.instance-id:${random.value}}
+        appname: geo
+        instanceId: geo:${spring.application.instance-id:${random.value}}
         lease-renewal-interval-in-seconds: 5
         lease-expiration-duration-in-seconds: 10
         status-page-url-path: ${management.endpoints.web.base-path}/info
@@ -81,7 +81,7 @@ management:
 
 spring:
     application:
-        name: geodecoder
+        name: geo
     messages:
         basename: i18n/messages
     mvc:
@@ -121,11 +121,11 @@ jhipster:
         #allow-credentials: true
         #max-age: 1800
     mail:
-        from: geodecoder@localhost
+        from: geo@localhost
     swagger:
         default-include-pattern: /api/.*
-        title: geodecoder API
-        description: geodecoder API documentation
+        title: geo API
+        description: geo API documentation
         version: 0.0.1
         terms-of-service-url:
         contact-name:

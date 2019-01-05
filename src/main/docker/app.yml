@@ -1,7 +1,7 @@
 version: '2'
 services:
-    geodecoder-app:
-        image: geodecoder
+    geo-app:
+        image: geo
         environment:
             - _JAVA_OPTIONS=-Xmx512m -Xms256m
             - SPRING_PROFILES_ACTIVE=prod,swagger

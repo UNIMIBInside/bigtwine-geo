@@ -1,4 +1,4 @@
-rootProject.name = 'geodecoder'
+rootProject.name = 'geo'
 
 include ':commons'
 project(':commons').projectDir = new File("../../commons")

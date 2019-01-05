@@ -17,12 +17,12 @@ eureka:
     client:
         enabled: false
     instance:
-        appname: geodecoder
-        instanceId: geodecoder:${spring.application.instance-id:${random.value}}
+        appname: geo
+        instanceId: geo:${spring.application.instance-id:${random.value}}
 
 spring:
     application:
-        name: geodecoder
+        name: geo
     cloud:
         stream:
             kafka:

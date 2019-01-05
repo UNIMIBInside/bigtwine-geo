@@ -38,7 +38,7 @@ public class AsyncConfiguration implements AsyncConfigurer, SchedulingConfigurer
         executor.setCorePoolSize(jHipsterProperties.getAsync().getCorePoolSize());
         executor.setMaxPoolSize(jHipsterProperties.getAsync().getMaxPoolSize());
         executor.setQueueCapacity(jHipsterProperties.getAsync().getQueueCapacity());
-        executor.setThreadNamePrefix("geodecoder-Executor-");
+        executor.setThreadNamePrefix("geo-Executor-");
         return new ExceptionHandlingAsyncTaskExecutor(executor);
     }
 
