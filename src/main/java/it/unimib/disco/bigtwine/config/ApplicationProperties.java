@@ -1,5 +1,6 @@
 package it.unimib.disco.bigtwine.config;
 
+import it.unimib.disco.bigtwine.geo.decoder.Decoder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -10,5 +11,33 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
+    private String defaultDecoder = ApplicationDefaults.defaultDecoder;
+    private final Executors executors = new Executors();
+    private final Processors processors = new Processors();
 
+    public static class Processors {
+
+    }
+
+    public static class Executors {
+
+    }
+
+    public String getDefaultDecoder() {
+        return defaultDecoder;
+    }
+
+    public void setDefaultDecoder(String defaultDecoder) {
+        this.defaultDecoder = defaultDecoder;
+        Decoder decoder = Decoder.valueOf(defaultDecoder);
+        Decoder.setDefault(decoder);
+    }
+
+    public Executors getExecutors() {
+        return this.executors;
+    }
+
+    public Processors getProcessors() {
+        return this.processors;
+    }
 }
