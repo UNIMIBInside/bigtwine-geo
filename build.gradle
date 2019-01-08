@@ -203,6 +203,7 @@ dependencies {
     testCompile "org.springframework.cloud:spring-cloud-stream-test-support"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
     compile project(':commons')
+    compile "fr.dudie:nominatim-api:3.3"
 }
 
 task cleanResources(type: Delete) {
