@@ -89,6 +89,14 @@ spring:
             enabled: false
     thymeleaf:
         mode: HTML
+    cloud:
+        stream:
+            bindings:
+                geoDecoderResponsesChannel:
+                    destination: geodecoder-responses
+                    content-type: application/json
+                geoDecoderRequestsChannel:
+                    destination: geodecoder-requests
 
 server:
     servlet:
