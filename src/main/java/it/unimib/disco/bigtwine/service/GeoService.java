@@ -2,7 +2,7 @@ package it.unimib.disco.bigtwine.service;
 
 import it.unimib.disco.bigtwine.commons.messaging.GeoDecoderRequestMessage;
 import it.unimib.disco.bigtwine.commons.messaging.GeoDecoderResponseMessage;
-import it.unimib.disco.bigtwine.commons.models.Address;
+import it.unimib.disco.bigtwine.commons.models.DecodedLocation;
 import it.unimib.disco.bigtwine.commons.processors.GenericProcessor;
 import it.unimib.disco.bigtwine.commons.processors.ProcessorListener;
 import it.unimib.disco.bigtwine.geo.decoder.Decoder;
@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class GeoService implements ProcessorListener<Address> {
+public class GeoService implements ProcessorListener<DecodedLocation> {
 
     private final Logger log = LoggerFactory.getLogger(GeoService.class);
     private MessageChannel channel;
@@ -107,11 +106,11 @@ public class GeoService implements ProcessorListener<Address> {
 
         String tag = this.getNewRequestTag();
         this.requests.put(tag, request);
-        processor.process(tag, request.getAddresses());
+        processor.process(tag, request.getLocations());
     }
 
 
-    private void sendResponse(Processor processor, String tag, Address[] addresses) {
+    private void sendResponse(Processor processor, String tag, DecodedLocation[] addresses) {
         if (!this.requests.containsKey(tag)) {
             log.debug("Request tagged '" + tag + "' expired");
             return;
@@ -121,7 +120,7 @@ public class GeoService implements ProcessorListener<Address> {
 
         GeoDecoderResponseMessage response = new GeoDecoderResponseMessage();
         response.setDecoder(processor.getDecoder().toString());
-        response.setAddresses(addresses);
+        response.setLocations(addresses);
         response.setRequestId(request.getRequestId());
 
         MessageBuilder<GeoDecoderResponseMessage> messageBuilder = MessageBuilder
@@ -145,7 +144,7 @@ public class GeoService implements ProcessorListener<Address> {
     }
 
     @Override
-    public void onProcessed(GenericProcessor processor, String tag, Address[] processedItems) {
+    public void onProcessed(GenericProcessor processor, String tag, DecodedLocation[] processedItems) {
         if (!(processor instanceof Processor)) {
             throw new AssertionError("Invalid processor type");
         }

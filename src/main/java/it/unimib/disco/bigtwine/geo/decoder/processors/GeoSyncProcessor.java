@@ -2,16 +2,16 @@ package it.unimib.disco.bigtwine.geo.decoder.processors;
 
 import it.unimib.disco.bigtwine.commons.executors.Executor;
 import it.unimib.disco.bigtwine.commons.executors.SyncExecutor;
-import it.unimib.disco.bigtwine.commons.models.Address;
+import it.unimib.disco.bigtwine.commons.models.DecodedLocation;
+import it.unimib.disco.bigtwine.commons.models.Location;
 import it.unimib.disco.bigtwine.commons.processors.ProcessorListener;
 import it.unimib.disco.bigtwine.commons.processors.SyncProcessor;
-import it.unimib.disco.bigtwine.geo.decoder.Decoder;
 import it.unimib.disco.bigtwine.geo.decoder.executors.GeoSyncExecutor;
 
 public abstract class GeoSyncProcessor implements Processor, SyncProcessor {
 
     protected GeoSyncExecutor executor;
-    protected ProcessorListener<Address> listener;
+    protected ProcessorListener<DecodedLocation> listener;
 
     public GeoSyncProcessor(GeoSyncExecutor executor) {
         super();
@@ -42,7 +42,7 @@ public abstract class GeoSyncProcessor implements Processor, SyncProcessor {
     }
 
     @Override
-    public void setListener(ProcessorListener<Address> listener) {
+    public void setListener(ProcessorListener<DecodedLocation> listener) {
         this.listener = listener;
     }
 
@@ -52,13 +52,13 @@ public abstract class GeoSyncProcessor implements Processor, SyncProcessor {
     }
 
     @Override
-    public boolean process(String tag, String item) {
-        return this.process(tag, new String[]{item});
+    public boolean process(String tag, Location item) {
+        return this.process(tag, new Location[]{item});
     }
 
     @Override
-    public boolean process(String tag, String[] items) {
-        Address[] addresses = this.getGeoSyncExecutor().search(items);
+    public boolean process(String tag, Location[] items) {
+        DecodedLocation[] addresses = this.getGeoSyncExecutor().search(items);
         if (this.listener != null && addresses != null) {
             this.listener.onProcessed(this, tag, addresses);
         }

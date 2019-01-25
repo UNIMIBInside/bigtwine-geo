@@ -1,6 +1,6 @@
 package it.unimib.disco.bigtwine.geo.decoder.parsers;
 
-import it.unimib.disco.bigtwine.commons.models.Address;
+import it.unimib.disco.bigtwine.commons.models.DecodedLocation;
 
 import java.io.Reader;
 
@@ -16,8 +16,8 @@ public final class NominatimOutputParser implements OutputParser {
     }
 
     @Override
-    public Address[] items() {
-        return new Address[0];
+    public DecodedLocation[] items() {
+        return new DecodedLocation[0];
     }
 
     @Override
@@ -26,7 +26,7 @@ public final class NominatimOutputParser implements OutputParser {
     }
 
     @Override
-    public Address next() {
+    public DecodedLocation next() {
         return null;
     }
 }

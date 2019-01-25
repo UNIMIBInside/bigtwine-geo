@@ -1,8 +1,10 @@
 package it.unimib.disco.bigtwine.geo.decoder.executors;
 
 import fr.dudie.nominatim.client.JsonNominatimClient;
-import it.unimib.disco.bigtwine.commons.models.Address;
+import fr.dudie.nominatim.model.Address;
+import it.unimib.disco.bigtwine.commons.models.DecodedLocation;
 import it.unimib.disco.bigtwine.commons.models.Coordinate;
+import it.unimib.disco.bigtwine.commons.models.Location;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
@@ -46,17 +48,22 @@ public class NominatimSyncExecutor implements GeoSyncExecutor {
     }
 
     @Override
-    public Address search(String location) {
+    public DecodedLocation search(Location location) {
         NominatimClient client = this.getNominatimClient();
+        String addressStr = location.getAddress();
         try {
-            List<fr.dudie.nominatim.model.Address> addresses = client.search(location);
+            List<Address> addresses = client.search(addressStr);
+
             if (addresses.size() == 0) {
                 return null;
             }
 
-            return new Address(location, new Coordinate(
-                addresses.get(0).getLatitude(),
-                addresses.get(0).getLongitude())
+            Address address = addresses.get(0);
+
+            return new DecodedLocation(
+                addressStr,
+                new Coordinate(address.getLatitude(), address.getLongitude()),
+                location.getTag()
             );
         }catch (IOException e) {
             return null;
@@ -64,14 +71,14 @@ public class NominatimSyncExecutor implements GeoSyncExecutor {
     }
 
     @Override
-    public Address[] search(String[] locations) {
-        List<Address> addresses = new ArrayList<>();
-        for (String location : locations) {
-            Address addr = this.search(location);
+    public DecodedLocation[] search(Location[] locations) {
+        List<DecodedLocation> addresses = new ArrayList<>();
+        for (Location location : locations) {
+            DecodedLocation addr = this.search(location);
             if (addr != null) {
                 addresses.add(addr);
             }
         }
-        return addresses.toArray(new Address[0]);
+        return addresses.toArray(new DecodedLocation[0]);
     }
 }
