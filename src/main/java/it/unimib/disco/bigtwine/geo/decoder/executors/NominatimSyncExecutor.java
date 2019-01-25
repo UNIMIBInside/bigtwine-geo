@@ -2,6 +2,7 @@ package it.unimib.disco.bigtwine.geo.decoder.executors;
 
 import fr.dudie.nominatim.client.JsonNominatimClient;
 import it.unimib.disco.bigtwine.commons.models.Address;
+import it.unimib.disco.bigtwine.commons.models.Coordinate;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
@@ -9,7 +10,6 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.SingleClientConnManager;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import fr.dudie.nominatim.client.NominatimClient;
 
 import java.io.IOException;
@@ -20,11 +20,11 @@ import java.util.List;
 public class NominatimSyncExecutor implements GeoSyncExecutor {
 
     public String getBaseUrl() {
-        return null;
+        return "https://nominatim.openstreetmap.org/";
     }
 
     public String getApiEmail() {
-        return null;
+        return "fausto91@gmail.com";
     }
 
     protected NominatimClient getNominatimClient() {
@@ -54,7 +54,7 @@ public class NominatimSyncExecutor implements GeoSyncExecutor {
                 return null;
             }
 
-            return new Address(location, new Address.Coordinate(
+            return new Address(location, new Coordinate(
                 addresses.get(0).getLatitude(),
                 addresses.get(0).getLongitude())
             );

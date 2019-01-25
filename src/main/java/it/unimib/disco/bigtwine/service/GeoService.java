@@ -13,12 +13,16 @@ import it.unimib.disco.bigtwine.messaging.GeoDecoderResponsesProducerChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class GeoService implements ProcessorListener<Address> {
@@ -26,13 +30,17 @@ public class GeoService implements ProcessorListener<Address> {
     private final Logger log = LoggerFactory.getLogger(GeoService.class);
     private MessageChannel channel;
     private ProcessorFactory processorFactory;
+    private KafkaTemplate<Integer, String> kafka;
     private Map<Decoder, Processor> processors = new HashMap<>();
+    private Map<String, GeoDecoderRequestMessage> requests = new HashMap<>();
 
     public GeoService(
         GeoDecoderResponsesProducerChannel channel,
-        ProcessorFactory processorFactory) {
+        ProcessorFactory processorFactory,
+        KafkaTemplate<Integer, String> kafka) {
         this.channel = channel.geoDecoderResponsesChannel();
         this.processorFactory = processorFactory;
+        this.kafka = kafka;
     }
 
     private Decoder getDecoder(String decoderId) {
@@ -80,6 +88,10 @@ public class GeoService implements ProcessorListener<Address> {
         return processor;
     }
 
+    private String getNewRequestTag() {
+        return UUID.randomUUID().toString();
+    }
+
     private void processDecodeRequest(GeoDecoderRequestMessage request) {
         Decoder decoder = this.getDecoder(request.getDecoder());
 
@@ -93,19 +105,35 @@ public class GeoService implements ProcessorListener<Address> {
             return;
         }
 
-        processor.process(request.getRequestId(), request.getAddresses());
+        String tag = this.getNewRequestTag();
+        this.requests.put(tag, request);
+        processor.process(tag, request.getAddresses());
     }
 
 
     private void sendResponse(Processor processor, String tag, Address[] addresses) {
-        // for (LinkedTweet tweet : tweets) {
-        //      System.out.println("Linked tweet: " + tweet.getId());
-        // }
+        if (!this.requests.containsKey(tag)) {
+            log.debug("Request tagged '" + tag + "' expired");
+            return;
+        }
+
+        GeoDecoderRequestMessage request = this.requests.remove(tag);
+
         GeoDecoderResponseMessage response = new GeoDecoderResponseMessage();
         response.setDecoder(processor.getDecoder().toString());
         response.setAddresses(addresses);
-        response.setRequestId(tag);
-        this.channel.send(MessageBuilder.withPayload(response).build());
+        response.setRequestId(request.getRequestId());
+
+        MessageBuilder<GeoDecoderResponseMessage> messageBuilder = MessageBuilder
+            .withPayload(response);
+
+        if (request.getOutputTopic() != null) {
+            messageBuilder.setHeader(KafkaHeaders.TOPIC, request.getOutputTopic());
+            this.kafka.send(messageBuilder.build());
+        }else {
+            this.channel.send(messageBuilder.build());
+        }
+
         log.info("Request Processed: {}.", tag);
     }
 

@@ -15,6 +15,7 @@ public abstract class GeoSyncProcessor implements Processor, SyncProcessor {
 
     public GeoSyncProcessor(GeoSyncExecutor executor) {
         super();
+        this.setExecutor(executor);
     }
 
     @Override
