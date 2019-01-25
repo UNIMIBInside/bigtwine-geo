@@ -17,7 +17,7 @@ logging:
     level:
         ROOT: DEBUG
         io.github.jhipster: DEBUG
-        it.unimib.disco.bigtwine: DEBUG
+        it.unimib.disco.bigtwine.services.geo: DEBUG
 
 eureka:
     instance:
@@ -93,8 +93,8 @@ jhipster:
     security:
         authentication:
             jwt:
-                # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
-                base64-secret: NzhjNzg1ZTVmY2I5ZTI1NjBmOTk1ZDhmYTQ3MWI4NDkwOGNmZDBjZTNjYTBiNjBhMWViNjQ1OTEzN2JhZmE4ZmJhZDMzMWQ5OGI3OWM2OGEyMzQ1OGViMWRkYTk2OWZmM2ZmZWExOTE3ZjQ0ZGQ1NTYxNTEzMjJiYTRkNzBiYjc=
+                # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+                base64-secret: ODUwMjg3ZjE5NWU5MTYzMGFiNWU1YjQ0MzNkMjQ3ODRlYTg0MmFhOTIwYjllNDE1YWYxYjVkMDY4OWExYTI1YWYyNzg5ZTkyNDBiZjY4ZjljNGY2OTY0MWJmMmEzMzMxMzA1YzZmMzVmYzdhZDEyMzc1YTcwMWJiYzQyYTE4NjE=
                 # Token is valid 24 hours
                 token-validity-in-seconds: 86400
                 token-validity-in-seconds-for-remember-me: 2592000
