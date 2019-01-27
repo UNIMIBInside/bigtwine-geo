@@ -2,7 +2,7 @@ package it.unimib.disco.bigtwine.services.geo.service;
 
 import it.unimib.disco.bigtwine.commons.messaging.GeoDecoderRequestMessage;
 import it.unimib.disco.bigtwine.commons.messaging.GeoDecoderResponseMessage;
-import it.unimib.disco.bigtwine.commons.models.Counter;
+import it.unimib.disco.bigtwine.commons.messaging.RequestCounter;
 import it.unimib.disco.bigtwine.commons.models.DecodedLocation;
 import it.unimib.disco.bigtwine.commons.processors.GenericProcessor;
 import it.unimib.disco.bigtwine.commons.processors.ProcessorListener;
@@ -32,7 +32,7 @@ public class GeoService implements ProcessorListener<DecodedLocation> {
     private ProcessorFactory processorFactory;
     private KafkaTemplate<Integer, String> kafka;
     private Map<Decoder, Processor> processors = new HashMap<>();
-    private Map<String, Counter<GeoDecoderRequestMessage>> requests = new HashMap<>();
+    private Map<String, RequestCounter<GeoDecoderRequestMessage>> requests = new HashMap<>();
 
     public GeoService(
         GeoDecoderResponsesProducerChannel channel,
@@ -106,7 +106,7 @@ public class GeoService implements ProcessorListener<DecodedLocation> {
         }
 
         String tag = this.getNewRequestTag();
-        this.requests.put(tag, new Counter<>(request, request.getLocations().length));
+        this.requests.put(tag, new RequestCounter<>(request, request.getLocations().length));
         processor.process(tag, request.getLocations());
     }
 
@@ -117,7 +117,7 @@ public class GeoService implements ProcessorListener<DecodedLocation> {
             return;
         }
 
-        Counter<GeoDecoderRequestMessage> requestCounter = this.requests.get(tag);
+        RequestCounter<GeoDecoderRequestMessage> requestCounter = this.requests.get(tag);
         requestCounter.decrement(addresses.length);
         GeoDecoderRequestMessage request = requestCounter.get();
         if (!requestCounter.hasMore()) {
