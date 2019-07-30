@@ -4,6 +4,7 @@ import it.unimib.disco.bigtwine.commons.messaging.GeoDecoderRequestMessage;
 import it.unimib.disco.bigtwine.commons.messaging.GeoDecoderResponseMessage;
 import it.unimib.disco.bigtwine.commons.messaging.RequestCounter;
 import it.unimib.disco.bigtwine.commons.models.DecodedLocation;
+import it.unimib.disco.bigtwine.commons.models.dto.DecodedLocationDTO;
 import it.unimib.disco.bigtwine.commons.processors.GenericProcessor;
 import it.unimib.disco.bigtwine.commons.processors.ProcessorListener;
 import it.unimib.disco.bigtwine.services.geo.decoder.Decoder;
@@ -20,6 +21,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -126,7 +128,7 @@ public class GeoService implements ProcessorListener<DecodedLocation> {
 
         GeoDecoderResponseMessage response = new GeoDecoderResponseMessage();
         response.setDecoder(processor.getDecoder().toString());
-        response.setLocations(addresses);
+        response.setLocations(Arrays.asList(addresses).toArray(new DecodedLocationDTO[addresses.length]));
         response.setRequestId(request.getRequestId());
 
         MessageBuilder<GeoDecoderResponseMessage> messageBuilder = MessageBuilder

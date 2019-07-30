@@ -5,6 +5,8 @@ import fr.dudie.nominatim.model.Address;
 import it.unimib.disco.bigtwine.commons.models.DecodedLocation;
 import it.unimib.disco.bigtwine.commons.models.Coordinate;
 import it.unimib.disco.bigtwine.commons.models.Location;
+import it.unimib.disco.bigtwine.commons.models.dto.CoordinatesDTO;
+import it.unimib.disco.bigtwine.commons.models.dto.DecodedLocationDTO;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
@@ -60,9 +62,9 @@ public class NominatimSyncExecutor implements GeoSyncExecutor {
 
             Address address = addresses.get(0);
 
-            return new DecodedLocation(
+            return new DecodedLocationDTO(
                 addressStr,
-                new Coordinate(address.getLatitude(), address.getLongitude()),
+                new CoordinatesDTO(address.getLatitude(), address.getLongitude()),
                 location.getTag()
             );
         }catch (IOException e) {
