@@ -23,12 +23,23 @@ import java.util.List;
 
 public class NominatimSyncExecutor implements GeoSyncExecutor {
 
+    private String baseUrl = "https://nominatim.openstreetmap.org/";
+    private String apiEmail;
+
     public String getBaseUrl() {
-        return "https://nominatim.openstreetmap.org/";
+        return baseUrl;
     }
 
     public String getApiEmail() {
-        return "fausto91@gmail.com";
+        return apiEmail;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    public void setApiEmail(String apiEmail) {
+        this.apiEmail = apiEmail;
     }
 
     protected NominatimClient getNominatimClient() {

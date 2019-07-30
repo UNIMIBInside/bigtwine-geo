@@ -15,14 +15,6 @@ public class ApplicationProperties {
     private final Executors executors = new Executors();
     private final Processors processors = new Processors();
 
-    public static class Processors {
-
-    }
-
-    public static class Executors {
-
-    }
-
     public String getDefaultDecoder() {
         return defaultDecoder;
     }
@@ -39,5 +31,29 @@ public class ApplicationProperties {
 
     public Processors getProcessors() {
         return this.processors;
+    }
+
+    public static class Processors {
+
+    }
+
+    public static class Executors {
+        private final Nominatim nominatim = new Nominatim();
+
+        public Nominatim getNominatim() {
+            return nominatim;
+        }
+
+        public static class Nominatim {
+            private String apiEmail = ApplicationDefaults.Executors.Nominatim.apiEmail;
+
+            public String getApiEmail() {
+                return apiEmail;
+            }
+
+            public void setApiEmail(String apiEmail) {
+                this.apiEmail = apiEmail;
+            }
+        }
     }
 }

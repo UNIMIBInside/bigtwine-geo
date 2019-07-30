@@ -5,7 +5,7 @@ import it.unimib.disco.bigtwine.services.geo.config.ApplicationProperties;
 import it.unimib.disco.bigtwine.services.geo.decoder.Decoder;
 import org.springframework.beans.factory.FactoryBean;
 
-public class ExecutorFactory  implements FactoryBean<Executor> {
+public class ExecutorFactory implements FactoryBean<Executor> {
 
     private Decoder decoder;
     private ApplicationProperties.Executors executorsProps;
@@ -36,6 +36,8 @@ public class ExecutorFactory  implements FactoryBean<Executor> {
         switch (decoder) {
             case nominatim:
                 NominatimSyncExecutor executor = new NominatimSyncExecutor();
+                executor.setApiEmail(executorsProps.getNominatim().getApiEmail());
+
                 return executor;
             default:
                 return null;
