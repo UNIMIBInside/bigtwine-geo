@@ -56,15 +56,15 @@ public class NominatimSyncExecutor implements GeoSyncExecutor {
         try {
             List<Address> addresses = client.search(addressStr);
 
-            if (addresses.size() == 0) {
-                return null;
+            CoordinatesDTO coordinates = null;
+            if (addresses.size() > 0) {
+                Address address = addresses.get(0);
+                coordinates = new CoordinatesDTO(address.getLatitude(), address.getLongitude());
             }
-
-            Address address = addresses.get(0);
 
             return new DecodedLocationDTO(
                 addressStr,
-                new CoordinatesDTO(address.getLatitude(), address.getLongitude()),
+                coordinates,
                 location.getTag()
             );
         }catch (IOException e) {
