@@ -2,11 +2,9 @@ package it.unimib.disco.bigtwine.services.geo.decoder.executors;
 
 import fr.dudie.nominatim.client.JsonNominatimClient;
 import fr.dudie.nominatim.model.Address;
-import it.unimib.disco.bigtwine.commons.models.DecodedLocation;
-import it.unimib.disco.bigtwine.commons.models.Coordinate;
-import it.unimib.disco.bigtwine.commons.models.Location;
-import it.unimib.disco.bigtwine.commons.models.dto.CoordinatesDTO;
-import it.unimib.disco.bigtwine.commons.models.dto.DecodedLocationDTO;
+import it.unimib.disco.bigtwine.services.geo.domain.DecodedLocation;
+import it.unimib.disco.bigtwine.services.geo.domain.Location;
+import it.unimib.disco.bigtwine.services.geo.domain.Coordinates;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
@@ -67,13 +65,13 @@ public class NominatimSyncExecutor implements GeoSyncExecutor {
         try {
             List<Address> addresses = client.search(addressStr);
 
-            CoordinatesDTO coordinates = null;
+            Coordinates coordinates = null;
             if (addresses.size() > 0) {
                 Address address = addresses.get(0);
-                coordinates = new CoordinatesDTO(address.getLatitude(), address.getLongitude());
+                coordinates = new Coordinates(address.getLatitude(), address.getLongitude());
             }
 
-            return new DecodedLocationDTO(
+            return new DecodedLocation(
                 addressStr,
                 coordinates,
                 location.getTag()

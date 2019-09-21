@@ -3,13 +3,15 @@ package it.unimib.disco.bigtwine.services.geo.service;
 import it.unimib.disco.bigtwine.commons.messaging.GeoDecoderRequestMessage;
 import it.unimib.disco.bigtwine.commons.messaging.GeoDecoderResponseMessage;
 import it.unimib.disco.bigtwine.commons.messaging.RequestCounter;
-import it.unimib.disco.bigtwine.commons.models.DecodedLocation;
-import it.unimib.disco.bigtwine.commons.models.dto.DecodedLocationDTO;
+import it.unimib.disco.bigtwine.commons.messaging.dto.DecodedLocationDTO;
+import it.unimib.disco.bigtwine.services.geo.domain.DecodedLocation;
 import it.unimib.disco.bigtwine.commons.processors.GenericProcessor;
 import it.unimib.disco.bigtwine.commons.processors.ProcessorListener;
 import it.unimib.disco.bigtwine.services.geo.decoder.Decoder;
 import it.unimib.disco.bigtwine.services.geo.decoder.processors.Processor;
 import it.unimib.disco.bigtwine.services.geo.decoder.processors.ProcessorFactory;
+import it.unimib.disco.bigtwine.services.geo.domain.Location;
+import it.unimib.disco.bigtwine.services.geo.domain.mapper.GeoMapper;
 import it.unimib.disco.bigtwine.services.geo.messaging.GeoDecoderRequestsConsumerChannel;
 import it.unimib.disco.bigtwine.services.geo.messaging.GeoDecoderResponsesProducerChannel;
 import org.slf4j.Logger;
@@ -108,8 +110,9 @@ public class GeoService implements ProcessorListener<DecodedLocation> {
         }
 
         String tag = this.getNewRequestTag();
-        this.requests.put(tag, new RequestCounter<>(request, request.getLocations().length));
-        processor.process(tag, request.getLocations());
+        Location[] locations = GeoMapper.INSTANCE.locationsFromDTOs(request.getLocations());
+        this.requests.put(tag, new RequestCounter<>(request, locations.length));
+        processor.process(tag, locations);
     }
 
 
@@ -126,9 +129,11 @@ public class GeoService implements ProcessorListener<DecodedLocation> {
             this.requests.remove(tag);
         }
 
+        DecodedLocationDTO[] locationDTOs = GeoMapper.INSTANCE.dtosFromDecodedLocations(addresses);
+
         GeoDecoderResponseMessage response = new GeoDecoderResponseMessage();
         response.setDecoder(processor.getDecoder().toString());
-        response.setLocations(Arrays.asList(addresses).toArray(new DecodedLocationDTO[addresses.length]));
+        response.setLocations(locationDTOs);
         response.setRequestId(request.getRequestId());
 
         MessageBuilder<GeoDecoderResponseMessage> messageBuilder = MessageBuilder

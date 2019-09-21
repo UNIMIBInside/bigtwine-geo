@@ -2,8 +2,8 @@ package it.unimib.disco.bigtwine.services.geo.decoder.processors;
 
 import it.unimib.disco.bigtwine.commons.executors.Executor;
 import it.unimib.disco.bigtwine.commons.executors.SyncExecutor;
-import it.unimib.disco.bigtwine.commons.models.DecodedLocation;
-import it.unimib.disco.bigtwine.commons.models.Location;
+import it.unimib.disco.bigtwine.services.geo.domain.DecodedLocation;
+import it.unimib.disco.bigtwine.services.geo.domain.Location;
 import it.unimib.disco.bigtwine.commons.processors.ProcessorListener;
 import it.unimib.disco.bigtwine.commons.processors.SyncProcessor;
 import it.unimib.disco.bigtwine.services.geo.decoder.executors.GeoSyncExecutor;
