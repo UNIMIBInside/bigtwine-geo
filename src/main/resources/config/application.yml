@@ -97,6 +97,7 @@ spring:
                     content-type: application/json
                 geoDecoderRequestsChannel:
                     destination: geodecoder-requests
+                    group: geo
 
 server:
     servlet:
