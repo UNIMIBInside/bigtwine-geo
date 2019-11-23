@@ -3,6 +3,7 @@ package it.unimib.disco.bigtwine.services.geo.service;
 import it.unimib.disco.bigtwine.commons.messaging.GeoDecoderRequestMessage;
 import it.unimib.disco.bigtwine.commons.messaging.GeoDecoderResponseMessage;
 import it.unimib.disco.bigtwine.commons.messaging.RequestCounter;
+import it.unimib.disco.bigtwine.commons.messaging.ResponseMessage;
 import it.unimib.disco.bigtwine.commons.messaging.dto.DecodedLocationDTO;
 import it.unimib.disco.bigtwine.services.geo.domain.DecodedLocation;
 import it.unimib.disco.bigtwine.commons.processors.GenericProcessor;
@@ -100,12 +101,14 @@ public class GeoService implements ProcessorListener<DecodedLocation> {
         Decoder decoder = this.getDecoder(request.getDecoder());
 
         if (decoder == null) {
+            this.sendRejected(request);
             return;
         }
 
         Processor processor = this.getProcessor(decoder);
 
         if (processor == null) {
+            this.sendRejected(request);
             return;
         }
 
@@ -115,6 +118,17 @@ public class GeoService implements ProcessorListener<DecodedLocation> {
         processor.process(tag, locations);
     }
 
+    private void sendExpired(GeoDecoderRequestMessage request) {
+        GeoDecoderResponseMessage response = new GeoDecoderResponseMessage();
+        response.setStatus(ResponseMessage.Status.EXPIRED);
+        this.doSendResponse(request, response);
+    }
+
+    private void sendRejected(GeoDecoderRequestMessage request) {
+        GeoDecoderResponseMessage response = new GeoDecoderResponseMessage();
+        response.setStatus(ResponseMessage.Status.REJECTED);
+        this.doSendResponse(request, response);
+    }
 
     private void sendResponse(Processor processor, String tag, DecodedLocation[] addresses) {
         if (!this.requests.containsKey(tag)) {
@@ -136,6 +150,20 @@ public class GeoService implements ProcessorListener<DecodedLocation> {
         response.setLocations(locationDTOs);
         response.setRequestId(request.getRequestId());
 
+        this.doSendResponse(request, response);
+
+        log.info("Request Processed: {}.", tag);
+    }
+
+    private void doSendResponse(GeoDecoderRequestMessage request, GeoDecoderResponseMessage response) {
+        if (response.getRequestId() == null) {
+            response.setRequestId(request.getRequestId());
+        }
+
+        if (response.getLocations() == null) {
+            response.setLocations(new DecodedLocationDTO[0]);
+        }
+
         MessageBuilder<GeoDecoderResponseMessage> messageBuilder = MessageBuilder
             .withPayload(response);
 
@@ -145,15 +173,17 @@ public class GeoService implements ProcessorListener<DecodedLocation> {
         }else {
             this.channel.send(messageBuilder.build());
         }
-
-        log.info("Request Processed: {}.", tag);
     }
-
 
     @StreamListener(GeoDecoderRequestsConsumerChannel.CHANNEL)
     public void onNewDecodeRequest(GeoDecoderRequestMessage request) {
-        log.info("Request Received: {}.", request.getRequestId());
-        this.processDecodeRequest(request);
+        if (request.getExpiration() > 0 && System.currentTimeMillis() > request.getExpiration()) {
+            log.warn("Request expired before processing: {}.", request.getRequestId());
+            this.sendExpired(request);
+        } else {
+            log.info("Request Received: {}.", request.getRequestId());
+            this.processDecodeRequest(request);
+        }
     }
 
     @Override
